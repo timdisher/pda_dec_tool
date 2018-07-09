@@ -1,0 +1,16 @@
+---
+output:
+  bookdown::gitbook:
+    css: style.css
+    number_sections: FALSE
+  bookdown::word_document:
+    reference_docx: template.docx
+---
+#Simplified application of MCDA to the results of a meta-analysis with multiple outcomes
+
+Timothy Disher  
+Chris Cameron  
+Aaron Situ  
+Souvik Mitra  
+
+#####PAGE BREAK

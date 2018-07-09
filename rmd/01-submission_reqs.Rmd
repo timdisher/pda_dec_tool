@@ -1,0 +1,41 @@
+#Submission requirements  
+
+*Article type:* Original research  
+*Word limit:* 1,500 - 4,500 words/  
+*Submission format:* Word document with separate .png for figures  
+*Drug names:* generic  
+*Submission components:*  
+1. Title page: Full names, highest degree, affiliation, departments/instutitions and contact information for each author, indicate corresponding author, word count excluding abstract acknowledgments, references, and figure legeds.  
+2. Abstract  
+3. Text  
+4. Acknowledgements  
+5. References  
+6. Tables  
+7. Figure legends  
+8. Appendices  
+Line numbering: no   
+ 
+  
+##To Do
+- ~~Configure Bookdown~~
+- ~~Review submission requirements~~  
+- ~~Configure GitHub~~  
+- Draft Introduction (Tim)    
+- Draft Methods (Tim)  
+- Develop Function (Tim)  
+    - Import and clean data (Tim)  
+    - Recreate network graph (Tim)  
+    - Create decision tool function (Tim)  
+    - Compare SUCRA tool vs Absolute tool vs Original conclusions
+    - Shiny app (Aaron)  
+- Draft Results (Tim)  
+- Draft Discussion (Tim)  
+- Draft Conclusion (Tim)  
+- Collaborator review (All)  
+- Integrate changes (Tim)  
+- Final Review (All)  
+- Submission (Tim)
+
+
+#####PAGE BREAK
+

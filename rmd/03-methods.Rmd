@@ -1,0 +1,8 @@
+# Methods  
+1. Review the case study, describe methods used.  
+2. Look just at primary analysis.  
+The study had no external funding source.  
+
+## Statistical analysis  
+1. Cite some MCDA lit + health eco, assumption that lor are normally distributed which is safe given vague priors.  
+2. Baseline risks are beta distributions.
