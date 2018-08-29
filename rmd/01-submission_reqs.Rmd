@@ -20,7 +20,7 @@ Line numbering: no
 - ~~Configure Bookdown~~
 - ~~Review submission requirements~~  
 - ~~Configure GitHub~~  
-- Draft Introduction (Tim)    
+- ~~Draft Introduction (Tim)~~    
 - Draft Methods (Tim)  
 - Develop Function (Tim)  
     - Import and clean data (Tim)  

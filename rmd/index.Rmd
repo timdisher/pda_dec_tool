@@ -6,11 +6,15 @@ output:
   bookdown::word_document:
     reference_docx: template.docx
 ---
+
 #Simplified application of MCDA to the results of a meta-analysis with multiple outcomes
 
-Timothy Disher  
-Chris Cameron  
-Aaron Situ  
-Souvik Mitra  
+Timothy Disher, PhD(c); Dalhousie University, School of Nursing, 5869 University Avenue, Halifax, NS, B3H-1X7; tim.disher@dal.ca  
+
+Chris Cameron, PhD; Cornerstone Research Group, Burlington, Ontario and Dalhousie University, Faculty of Graduate Studies, Halifax, NS; Ccameron@cornerstone-research.com  
+
+Aaron Situ, MSc; Cornerstone Research Group, Burlington, Ontario; Asitu@cornerstone-research.com  
+
+Souvik Mitra, MD; IWK Health Centre, Division of Neonatology, Halifax, NS; souvik.mitra@iwk.nshealth.ca  
 
 #####PAGE BREAK

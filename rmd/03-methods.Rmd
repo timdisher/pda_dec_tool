@@ -1,8 +1,54 @@
 # Methods  
-1. Review the case study, describe methods used.  
-2. Look just at primary analysis.  
-The study had no external funding source.  
+We use a recently published systematic review and meta-analysis of treatments for hemodynamically significant patent ductus arteriosus (PDA) in preterm infants as a case study. 
+PDA is a common complication in preterm infants (< 37 weeks completed weeks gestation), with potentially serious sequalae including increased risk of serious morbidity and mortality. 
+Initial pharmacologic treatment consists of non-steroidal anti-inflammatory drugs, most commonly ibuprofen or indomethacin delivered intravenously. 
+Mitra et al conducted a network meta-analysis to compare these interventions as well as acetaminophen in differing doses and routes for the treatment of hemodynamically significant PDA.  
+ 
+Elligible trials included randomized clinical trials that enrolled preterm or low birth weight (<2500g) infants. 
+The review included three primary outcomes and 11 secondary outcomes of which five had sufficient data for quantitative synthesis.
+Primary outcomes included physical closure or change from hemodynamically signicant to nonsignificant of PDA as determined by echocardiography.
+For the purpose of this paper we focus on secondary outcomes that were included in synthesis: death at postmentrual age 36 weeks or before discharge, necrotizing enterocolitis(>= Bell stage 2), bronchopulmonary dysplasia (defined as oxygen use at 36 weeks postmenstrual age), intraventricular hemorrhaghe (any grade by Papile criteria), and oligouria (urine output <1 mL/kg/h). 
+
+A total of 14 treatment nodes were reviewed in 68 studies (N = 4802), although the number of treatments/studies varied considerably across outcomes **(Figure 1 - network graph panel)**. 
+Of interest for this paper are that despite high dose oral ibuprophen performing well across most outcomes, it was among the worst treatments for mortality and oliguria, and performed average for intraventricular hemmorhage.
+While Mitra et al conclude that this is likely an artifact of the sparsity of the network for these outcomes (e.g. high dose oral ibuprophen provides only one study with a sample size of 30), it should still have implications for decision making.
+Of further interest is that, despite ranking poorly for PDA closure, wide credible intervals meant placebo or not treatment was not associated with a statistically significant increased odds of death, necrotizing enterocolitis, or IVH.   
 
 ## Statistical analysis  
+While Mitra et al., stop short of endorsing a treatment recommendation in their reivew, they conclude their discussion by stating that high and standard doses or oral ibuprofen/oral acetaminophen compared to standard regimes. 
+We compare these recommendations to those made through two competeting quantitative methods: one based on SUCRA and a second based on absolute probabilities. 
+
+###SUCRA Method
+The first method is based on the statintool published by **XXX**. 
+This approach consists of an interactive tool that allows users to rate the importance of outcomes using a slider from 0-100, where zero is unimportant is 100 is vital. 
+Weights are then normalized to sum to 100 and multiplied against their respective SUCRAs and treatments are ranked on this combined score. 
+For the SUCRA approach, higher SUCRAs are always better, since they are adjusted to be in the right direction by the original analyst.  
+
+###Absolute Rate Method
+The absolute rate approach is based on standard approaches to MCDA as described by Vandergoert et al.
+Both SUCRA and absolute rates place events on the same scale however, only absolute rates translate to a rational decision making framework. 
+For the absolute rates approach importance for "good" outcomes are interpretated as the relative desire to achieve the event so higher absolute values receive higher scores.
+For "bad" outcomes, ratings are interprated as a statement of preference for avoiding outcomes and is therefore multiplied by the proportion of those not anticipated to to experience the event.
+
+  
+###Data sources
+All data was extracted from the base case of the Mitra et al. publication.
+These analyses were conducted within a Bayesian framework using netmetaXL, a freely available Excel based software that implements the models described in the NICE TSDs.
+Models placed vague priors on treatment effects and the standard deviation of random effects, and properly account of multi-arm trials. 
+
+###Sources of uncertainty
+We allow for multiple sources of uncertainty in all models using methods commonly employed in the field of decision modeling. 
+For the SUCRA based tool, we allow for uncertainty in SUCRA ratings themselves (as reported in Mitra et al) as well uncertainty in preference ratings. 
+As these tools are situated within the context of readers of NMAs as opposed to analysts, we assume that they do not have access to original posterior draws of SUCRA.
+We assume that that SUCRAs can be described by a beta distribution parameterised using the method of moments based on the mean and standard deviation of the Mitra et al paper.
+For a second source of uncertainty, we allow for users to describe uncertainty in the weights they give to outcomes. 
+This feature can be used to either average multiple sets of ratings together (as in the case of a guideline panel or physician group), or simply to express uncertainty in the exact distribution of weights provided by a single individual.
+In the latter case, we again use the method of moments to allow users to express a mean weight with a standard deviation and then visualize the implied beta distribution.
+For the absolute rate method we assume that uncertainty in the relative effectiveness can be represented by a normal distribution on the scale of the linear predictor (e.g. log scale for odds ratios). 
+These estimates are then combined with absolute rates whose uncertainties are defined by a beta distribution. 
+Uncertainty in weights are illustrated using the same methods as the SUCRA approach.  
+For both approaches, all simulations are conducted by simulating 10,000 sets of parameters and calculating expectations of the gain function. Results are displayed as the mean and 95% credible intervals as well as the probability that a treatment is best. **Tornado diagrams for sensitivty to weights**
+
+
 1. Cite some MCDA lit + health eco, assumption that lor are normally distributed which is safe given vague priors.  
 2. Baseline risks are beta distributions.
