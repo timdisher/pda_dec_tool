@@ -26,6 +26,7 @@ pda_or = or_raw %>% group_by(outcome) %>%
                         median(., na.rm = TRUE), .))) %>% 
   ungroup() %>% 
   
+  #Convert ORs to log odds
   #Assume zeroes actually had estimates that were just small
   mutate_at(vars(median:upper),
             funs(ifelse(. == 0, log(0.000001), log(.)))) %>%
@@ -59,7 +60,11 @@ base[["bpd"]] <- p_samp(147, 333)
 base[["ivh"]] <- p_samp(70, 211)
 
 
-
+#----------------------------------------------------------------------------- -
+#----------------------------------------------------------------------------- -
+# Log odds
+#----------------------------------------------------------------------------- -
+#----------------------------------------------------------------------------- -
 lor_samp <- function(iter = 10000,data = pda_or, out_name){
 df <- tibble(closure = rep(NA, iter),
              rpt = NA,
@@ -106,11 +111,54 @@ map(ors, exp) %>% map(., colMeans)
 #Bind simulated base rates together
 #
 p_base <- do.call(cbind, base)
+#Convert to log odds
+
+log_p_base <- log(p_base/(1-p_base))
 
 #For each outcome, convert each row to a sampled probability
 abs <- ors
 trts <- unique(pda_or[[1]])
 
+
+#Calculate absolute rates
+
+temp_or <- abs[["IBUPOHIGHDOSE"]]
+
+t <- as.tibble(log(p_base/(1-p_base)))
+
+tempest <- t$mort + temp_or$mort
+plot(t$mort)
+plot(temp_or$mort)
+z <- t$mort + temp_or$mort
+
+quantile(exp(temp_or$mort), probs = c(0.025, 0.5, 0.975))
+tibble(mort = temp_or$mort,
+           base = t$mort,
+           tot = mort + base)
+mean(1/(1+exp(-z)))
+#Inverse logit
+inv_logit <- function(x, y = log_p_base){
+  z <- x + y
+  1/(1+exp(-z))
+}
+
+
+#For each outcome in each treatment, combine each estimated OR with each
+#baseline rate and then run them through inverse logit to get absolute rate
+#for that treatment/outcome combo
+
+quantile(exp(temp_or$mort), probs = c(0.025, 0.5, 0.975))
+abs_trt <- map(abs, inv_logit)
+
+# Make sure overall averages make sense
+
+map(abs_trt, ~summarise_all(. , mean))
+colMeans(p_base)
+
+
+z <- log_p_base + temp_or
+temp <- 1/(1+exp(-z))
+colMeans(temp)
 #----------------------------------------------------------------------------- -
 #----------------------------------------------------------------------------- -
 # Express as beta(a, b) for use in JSMAA
