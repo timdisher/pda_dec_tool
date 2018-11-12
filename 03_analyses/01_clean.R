@@ -29,24 +29,20 @@ all_codes <- reduce(all_codes, left_join, by = "Drug") %>%
 
 missing_outs <- all_codes %>% select_if(., ~anyNA(.)) %>% colnames()
 
-for(i in seq_along(missing_outs)){
 
-all_outs[[missing_outs[[i]]]]$t_1 <- all_codes[match(all_outs[[missing_outs[[i]]]]$t_1, all_codes[[missing_outs[[i]]]]),2] %>% .$closure
-
-all_outs[[missing_outs[[i]]]]$t_2 <- all_codes[match(all_outs[[missing_outs[[i]]]]$t_2, all_codes[[missing_outs[[i]]]]),2] %>% .$closure
-
-}
-
+ranks <- read_excel("./02_data/pda.xlsx", sheet = "rankings")
+ranks2 <- read_excel("./02_data/pda.xlsx", sheet = "rankings_td")
 # Simple contigency correction adding 0.5 to studies with all zero event cells.
 # Using this because original analysis was in NetmetaXL and the Sweeney correction
 # was used to make a connected network.
 
 
-for(i in seq_along(all_outs)){
+# for(i in seq_along(all_outs)){
+# 
+# all_outs[[i]] = all_outs[[i]] %>% mutate(r_1 = ifelse(r_1 == 0 & r_2 == 0, r_1 + 0.5, r_1),
+#                                          r_2 = ifelse(r_1 == 0.5 & r_2 == 0, r_2 + 0.5, r_2),
+#                                          n_1 = ifelse(r_1 == 0.5 & r_2 == 0.5, n_1 + 0.5, n_1),
+#                                          n_2 = ifelse(r_1 == 0.5 & r_2 == 0.5, n_2 + 0.5, n_2))
+# 
+# }
 
-all_outs[[i]] = all_outs[[i]] %>% mutate(r_1 = ifelse(r_1 == 0 & r_2 == 0, r_1 + 0.5, r_1),
-                                         r_2 = ifelse(r_1 == 0.5 & r_2 == 0, r_2 + 0.5, r_2),
-                                         n_1 = ifelse(r_1 == 0.5 & r_2 == 0.5, n_1 + 0.5, n_1),
-                                         n_2 = ifelse(r_1 == 0.5 & r_2 == 0.5, n_2 + 0.5, n_2))
-
-}
