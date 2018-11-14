@@ -17,6 +17,11 @@ read_excel_allsheets <- function(filename) {
   x
 }
 
+
+# Please note one correction: In the BPD NetmetaXL, reference 2 was entered
+# as INDOIV vs Placebo but should have been IBUIV vs placebo. Data use correct
+# treatment code.
+
 all_outs <- read_excel_allsheets("./02_data/pda_outcomes.xlsx") %>% 
   map(., ~ clean_names(., "snake") %>% 
         select(study_name, ends_with("1"), ends_with("2")))
