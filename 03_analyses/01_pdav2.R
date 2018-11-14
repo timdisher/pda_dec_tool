@@ -4,6 +4,9 @@ library(readxl)
 source("./03_analyses/01_clean.R")
 source("./04_functions/nma_cont_gemtc.R")
 library(beepr)
+library(smaa)
+library(hitandrun)
+library(memisc)
 #----------------------------------------------------------------------------- -
 #----------------------------------------------------------------------------- -
 # SMAA in R
@@ -164,14 +167,14 @@ w <- har(seedPoint, constr, N=N * (n-1)^3, thin=(n-1)^3,
          homogeneous=TRUE, transform=transform)$samples
 
 
-ps_array <- reorder(ps_array, dim = 3, names = c(ranks %>% arrange(rank) %>% .$outcome)) # Outcome dimension needs to be in same order as weights
-ps_array_td <- reorder(ps_array, dim = 3, names = c(ranks2 %>% arrange(rank) %>% .$outcome))
+ps_array_sm <- reorder(ps_array, dim = 3, names = c(ranks %>% arrange(rank) %>% .$outcome)) # Outcome dimension needs to be in same order as weights
+ps_array_mcy <- reorder(ps_array, dim = 3, names = c(ranks2 %>% arrange(rank) %>% .$outcome))
 
 
 
 
-pda_smaa <- smaa(ps_array, w)
-pda_smaa_td <- smaa(ps_array_td, w)
+pda_smaa <- smaa(ps_array_sm, w)
+pda_smaa_mcy <- smaa(ps_array_mcy, w)
 
 values <- smaa.values(ps_array, w)
 values_td <- smaa.values(ps_array_td, w)
