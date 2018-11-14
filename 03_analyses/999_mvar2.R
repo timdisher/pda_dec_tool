@@ -62,6 +62,7 @@ data <- list(
   na = rep(2, nrow(all_outs$nec)),
   ns = nrow(all_outs$nec),
   nt = 10,
+
   
   #BPD
   t2 = all_outs$bpd %>% select(starts_with("t_")) %>% as.matrix,
@@ -70,18 +71,23 @@ data <- list(
   na2 = rep(2, nrow(all_outs$bpd)),
   ns2 = nrow(all_outs$bpd)
   
-  #rho = 0 # Assume rho = 0.5 in base case
+
 )
 
 
 # test_mod <- jags(data = data, parameters.to.save = c("or1", "or2", "d_oa", "sd_oa"), model.file = "./05_models/binom_re_mvar2_contrast.txt",
 #      n.iter = 100000, n.burnin = 40000)
 
-test_mod <- jags(data = data, parameters.to.save = c("or1", "or2", "d_oa", "sd_oa"), model.file = "./05_models/binom_re_mvar2.txt",
+# test_mod <- jags(data = data, parameters.to.save = c("or1", "or2", "d_oa", "sd_oa"), model.file = "./05_models/binom_re_mvar2.txt",
+#                  n.iter = 100000, n.burnin = 40000)
+# windows()
+# traceplot(test_mod)
+# all_codes
+
+
+test_mod_pp <- jags(data = data, parameters.to.save = c("or1", "or2", "d_oa", "sd_oa"), model.file = "./05_models/binom_re_mvar2power_prior_working.txt",
                  n.iter = 100000, n.burnin = 40000)
-windows()
-traceplot(test_mod)
-all_codes
 
-all_outs$nec
 
+all_codes_temp <- all_codes[,1:2] %>% `colnames<-`(c("trt", "t"))
+test_pp <- nma_binom(data = all_outs[[1]] %>% mutate(na = 2), model = "./05_models/binom_re_test.txt")  
