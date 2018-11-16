@@ -1,12 +1,12 @@
 #User input
-library(tidyverse)
 library(readxl)
 source("./03_analyses/01_clean.R")
 source("./04_functions/nma_cont_gemtc.R")
 library(beepr)
 library(smaa)
 library(hitandrun)
-library(memisc)
+
+
 #----------------------------------------------------------------------------- -
 #----------------------------------------------------------------------------- -
 # SMAA in R

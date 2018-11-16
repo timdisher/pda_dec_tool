@@ -5,22 +5,29 @@ model
 for (k in 2:nt){
 d[k] ~ dnorm(d_oa[k], tau_oa)
 d2[k] ~ dnorm(d_oa[k], tau_oa)
+d3[k] ~ dnorm(d_oa[k], tau_oa)
+d4[k] ~ dnorm(d_oa[k], tau_oa)
+d5[k] ~ dnorm(d_oa[k], tau_oa)
+d6[k] ~ dnorm(d_oa[k], tau_oa)
+d7[k] ~ dnorm(d_oa[k], tau_oa)
+d8[k] ~ dnorm(d_oa[k], tau_oa)
 
 d_oa[k] ~ dnorm(0.00000E+00, 1.00000E-04)
 }
 
-sd_oa ~ dunif(0,5)
+sd_oa ~ dunif(0,2)
 tau_oa <- pow(sd, -2)
 
+resdev_oa <- sum(totresdev1[],  totresdev2[], totresdev3[], totresdev4[], totresdev5[], totresdev6[], totresdev7[], totresdev8[])
 
-#Outcome 1
+#Outcome 1----------------------------------------------------------------------
     for (i in 1:ns) {
         w[i, 1] <- 0.00000E+00
         delta[i, 1] <- 0.00000E+00
         mu[i] ~ dnorm(0.00000E+00, 1.00000E-04)
         for (k in 1:na[i]) {
-           zero[i, k] ~ dpois(phi[i, k]) ### Zeros trick Refers to a matrix of zeros with same dimension as the trial with the most arms.
-	   phi[i, k] <- 1E6 - alpha * (r[i, k] * log(p[i, k]) + (n[i, k] - r[i, k]) * log(1 - p[i, k])) ### log likelihood multiplied by inflation factor (alpha)	
+           zero[i, k] ~ dpois(phi[i, k]) 
+	   phi[i, k] <- 1E6 - alpha * (r[i, k] * log(p[i, k]) + (n[i, k] - r[i, k]) * log(1 - p[i, k])) 
 	   
            logit(p[i, k]) <- mu[i] + delta[i, k]
            
@@ -39,7 +46,7 @@ tau_oa <- pow(sd, -2)
             sw[i, k] <- sum(w[i, 1:(k - 1)])/(k - 1)
         }
     }
-    totresdev <- sum(resdev[])
+    totresdev1 <- sum(resdev[])
     d[1] <- 0.00000E+00
  
     
@@ -52,15 +59,16 @@ tau_oa <- pow(sd, -2)
     or1[1,k] <- exp(d[k])
 }
 
+#-------------------------------------------------------------------------------
 
-#Outcome 2
+#Outcome 2----------------------------------------------------------------------
   for (i in 1:ns2) {
         w2[i, 1] <- 0.00000E+00
         delta2[i, 1] <- 0.00000E+00
         mu2[i] ~ dnorm(0.00000E+00, 1.00000E-04)
         for (k in 1:na2[i]) {
-            zero2[i, k] ~ dpois(phi2[i, k]) ### Zeros trick Refers to a matrix of zeros with same dimension as the trial with the most arms.
-	   phi2[i, k] <- 1E6 - alpha * (r2[i, k] * log(p2[i, k]) + (n2[i, k] - r2[i, k]) * log(1 - p2[i, k])) ### log likelihood multiplied by inflation factor (alpha)	
+            zero2[i, k] ~ dpois(phi2[i, k]) 
+	   phi2[i, k] <- 1E6 - alpha * (r2[i, k] * log(p2[i, k]) + (n2[i, k] - r2[i, k]) * log(1 - p2[i, k])) 
             logit(p2[i, k]) <- mu2[i] + delta2[i, k]
             rhat2[i, k] <- p2[i, k] * n2[i, k]
          dev2[i, k] <- alpha * 2 *
@@ -71,7 +79,7 @@ tau_oa <- pow(sd, -2)
         for (k in 2:na2[i]) {
             delta2[i, k] ~ dnorm(md2[i, k], taud2[i, k])
             md2[i, k] <- d2[t2[i, k]] - d2[t2[i, 1]] + sw2[i, k]
-            taud2[i, k] <- tau * 2 * (k - 1)/k
+            taud2[i, k] <- tau2 * 2 * (k - 1)/k
             w2[i, k] <- (delta2[i, k] - d2[t2[i, k]] + d2[t2[i, 1]])
             sw2[i, k] <- sum(w2[i, 1:(k - 1)])/(k - 1)
         }
@@ -87,8 +95,234 @@ for(k in 2:nt){
     tau2 <- 1/vari2
     
     sd2 <- pow(tau2, -0.5)
-    
 
+
+#-------------------------------------------------------------------------------
+
+#Outcome 3----------------------------------------------------------------------
+  for (i in 1:ns3) {
+        w3[i, 1] <- 0.00000E+00
+        delta3[i, 1] <- 0.00000E+00
+        mu3[i] ~ dnorm(0.00000E+00, 1.00000E-04)
+        for (k in 1:na3[i]) {
+            zero3[i, k] ~ dpois(phi3[i, k]) 
+	   phi3[i, k] <- 1E6 - alpha * (r3[i, k] * log(p3[i, k]) + (n3[i, k] - r3[i, k]) * log(1 - p3[i, k])) 
+            logit(p3[i, k]) <- mu3[i] + delta3[i, k]
+            rhat3[i, k] <- p3[i, k] * n3[i, k]
+         dev3[i, k] <- alpha * 2 *
+			  (r3[i, k] * (log(r3[i, k]) - log(rhat3[i, k])) +
+			   (n3[i, k]-r3[i, k]) * (log(n3[i, k] - r3[i, k]) - log(n3[i, k] - rhat3[i, k])))
+        }
+        resdev3[i] <- sum(dev3[i, 1:na3[i]])
+        for (k in 2:na3[i]) {
+            delta3[i, k] ~ dnorm(md3[i, k], taud3[i, k])
+            md3[i, k] <- d3[t3[i, k]] - d3[t3[i, 1]] + sw3[i, k]
+            taud3[i, k] <- tau3 * 2 * (k - 1)/k
+            w3[i, k] <- (delta3[i, k] - d3[t3[i, k]] + d3[t3[i, 1]])
+            sw3[i, k] <- sum(w3[i, 1:(k - 1)])/(k - 1)
+        }
+    }
+    totresdev3 <- sum(resdev3[])
+    d3[1] <- 0.00000E+00
+    
+for(k in 2:nt){
+    or3[1,k] <- exp(d3[k])
+}
+   
+    vari3 ~ dlnorm(-4.06, 0.6897)
+    tau3 <- 1/vari3
+    
+    sd3 <- pow(tau3, -0.5)
+
+
+#-------------------------------------------------------------------------------
+
+#Outcome 4----------------------------------------------------------------------
+  for (i in 1:ns4) {
+        w4[i, 1] <- 0.00000E+00
+        delta4[i, 1] <- 0.00000E+00
+        mu4[i] ~ dnorm(0.00000E+00, 1.00000E-04)
+        for (k in 1:na4[i]) {
+            zero4[i, k] ~ dpois(phi4[i, k]) 
+	   phi4[i, k] <- 1E6 - alpha * (r4[i, k] * log(p4[i, k]) + (n4[i, k] - r4[i, k]) * log(1 - p4[i, k])) 
+            logit(p4[i, k]) <- mu4[i] + delta4[i, k]
+            rhat4[i, k] <- p4[i, k] * n4[i, k]
+         dev4[i, k] <- alpha * 2 *
+			  (r4[i, k] * (log(r4[i, k]) - log(rhat4[i, k])) +
+			   (n4[i, k]-r4[i, k]) * (log(n4[i, k] - r4[i, k]) - log(n4[i, k] - rhat4[i, k])))
+        }
+        resdev4[i] <- sum(dev4[i, 1:na4[i]])
+        for (k in 2:na4[i]) {
+            delta4[i, k] ~ dnorm(md4[i, k], taud4[i, k])
+            md4[i, k] <- d4[t4[i, k]] - d4[t4[i, 1]] + sw4[i, k]
+            taud4[i, k] <- tau4 * 2 * (k - 1)/k
+            w4[i, k] <- (delta4[i, k] - d4[t4[i, k]] + d4[t4[i, 1]])
+            sw4[i, k] <- sum(w4[i, 1:(k - 1)])/(k - 1)
+        }
+    }
+    totresdev4 <- sum(resdev4[])
+    d4[1] <- 0.00000E+00
+    
+for(k in 2:nt){
+    or4[1,k] <- exp(d4[k])
+}
+   
+    vari4 ~ dlnorm(-4.06, 0.6897)
+    tau4 <- 1/vari4
+    
+    sd4 <- pow(tau4, -0.5)
+
+
+#-------------------------------------------------------------------------------
+
+#Outcome 5----------------------------------------------------------------------
+  for (i in 1:ns5) {
+        w5[i, 1] <- 0.00000E+00
+        delta5[i, 1] <- 0.00000E+00
+        mu5[i] ~ dnorm(0.00000E+00, 1.00000E-04)
+        for (k in 1:na5[i]) {
+            zero5[i, k] ~ dpois(phi5[i, k]) 
+	   phi5[i, k] <- 1E6 - alpha * (r5[i, k] * log(p5[i, k]) + (n5[i, k] - r5[i, k]) * log(1 - p5[i, k])) 
+            logit(p5[i, k]) <- mu5[i] + delta5[i, k]
+            rhat5[i, k] <- p5[i, k] * n5[i, k]
+         dev5[i, k] <- alpha * 2 *
+			  (r5[i, k] * (log(r5[i, k]) - log(rhat5[i, k])) +
+			   (n5[i, k]-r5[i, k]) * (log(n5[i, k] - r5[i, k]) - log(n5[i, k] - rhat5[i, k])))
+        }
+        resdev5[i] <- sum(dev5[i, 1:na5[i]])
+        for (k in 2:na5[i]) {
+            delta5[i, k] ~ dnorm(md5[i, k], taud5[i, k])
+            md5[i, k] <- d5[t5[i, k]] - d5[t5[i, 1]] + sw5[i, k]
+            taud5[i, k] <- tau5 * 2 * (k - 1)/k
+            w5[i, k] <- (delta5[i, k] - d5[t5[i, k]] + d5[t5[i, 1]])
+            sw5[i, k] <- sum(w5[i, 1:(k - 1)])/(k - 1)
+        }
+    }
+    totresdev5 <- sum(resdev5[])
+    d5[1] <- 0.00000E+00
+    
+for(k in 2:nt){
+    or5[1,k] <- exp(d5[k])
+}
+   
+    vari5 ~ dlnorm(-4.06, 0.6897)
+    tau5 <- 1/vari5
+    
+    sd5 <- pow(tau5, -0.5)
+
+
+#-------------------------------------------------------------------------------
+
+#Outcome 6----------------------------------------------------------------------
+  for (i in 1:ns6) {
+        w6[i, 1] <- 0.00000E+00
+        delta6[i, 1] <- 0.00000E+00
+        mu6[i] ~ dnorm(0.00000E+00, 1.00000E-04)
+        for (k in 1:na6[i]) {
+            zero6[i, k] ~ dpois(phi6[i, k]) 
+	   phi6[i, k] <- 1E6 - alpha * (r6[i, k] * log(p6[i, k]) + (n6[i, k] - r6[i, k]) * log(1 - p6[i, k])) 
+            logit(p6[i, k]) <- mu6[i] + delta6[i, k]
+            rhat6[i, k] <- p6[i, k] * n6[i, k]
+         dev6[i, k] <- alpha * 2 *
+			  (r6[i, k] * (log(r6[i, k]) - log(rhat6[i, k])) +
+			   (n6[i, k]-r6[i, k]) * (log(n6[i, k] - r6[i, k]) - log(n6[i, k] - rhat6[i, k])))
+        }
+        resdev6[i] <- sum(dev6[i, 1:na6[i]])
+        for (k in 2:na6[i]) {
+            delta6[i, k] ~ dnorm(md6[i, k], taud6[i, k])
+            md6[i, k] <- d6[t6[i, k]] - d6[t6[i, 1]] + sw6[i, k]
+            taud6[i, k] <- tau6 * 2 * (k - 1)/k
+            w6[i, k] <- (delta6[i, k] - d6[t6[i, k]] + d6[t6[i, 1]])
+            sw6[i, k] <- sum(w6[i, 1:(k - 1)])/(k - 1)
+        }
+    }
+    totresdev6 <- sum(resdev6[])
+    d6[1] <- 0.00000E+00
+    
+for(k in 2:nt){
+    or6[1,k] <- exp(d6[k])
+}
+   
+    vari6 ~ dlnorm(-4.06, 0.6897)
+    tau6 <- 1/vari6
+    
+    sd6 <- pow(tau6, -0.5)
+
+
+#-------------------------------------------------------------------------------
+
+#Outcome 7----------------------------------------------------------------------
+  for (i in 1:ns7) {
+        w7[i, 1] <- 0.00000E+00
+        delta7[i, 1] <- 0.00000E+00
+        mu7[i] ~ dnorm(0.00000E+00, 1.00000E-04)
+        for (k in 1:na7[i]) {
+            zero7[i, k] ~ dpois(phi7[i, k]) 
+	   phi7[i, k] <- 1E6 - alpha * (r7[i, k] * log(p7[i, k]) + (n7[i, k] - r7[i, k]) * log(1 - p7[i, k])) 
+            logit(p7[i, k]) <- mu7[i] + delta7[i, k]
+            rhat7[i, k] <- p7[i, k] * n7[i, k]
+         dev7[i, k] <- alpha * 2 *
+			  (r7[i, k] * (log(r7[i, k]) - log(rhat7[i, k])) +
+			   (n7[i, k]-r7[i, k]) * (log(n7[i, k] - r7[i, k]) - log(n7[i, k] - rhat7[i, k])))
+        }
+        resdev7[i] <- sum(dev7[i, 1:na7[i]])
+        for (k in 2:na7[i]) {
+            delta7[i, k] ~ dnorm(md7[i, k], taud7[i, k])
+            md7[i, k] <- d7[t7[i, k]] - d7[t7[i, 1]] + sw7[i, k]
+            taud7[i, k] <- tau7 * 2 * (k - 1)/k
+            w7[i, k] <- (delta7[i, k] - d7[t7[i, k]] + d7[t7[i, 1]])
+            sw7[i, k] <- sum(w7[i, 1:(k - 1)])/(k - 1)
+        }
+    }
+    totresdev7 <- sum(resdev7[])
+    d7[1] <- 0.00000E+00
+    
+for(k in 2:nt){
+    or7[1,k] <- exp(d7[k])
+}
+   
+    vari7 ~ dlnorm(-4.06, 0.6897)
+    tau7 <- 1/vari7
+    
+    sd7 <- pow(tau7, -0.5)
+
+
+#-------------------------------------------------------------------------------
+
+#Outcome 8----------------------------------------------------------------------
+  for (i in 1:ns8) {
+        w8[i, 1] <- 0.00000E+00
+        delta8[i, 1] <- 0.00000E+00
+        mu8[i] ~ dnorm(0.00000E+00, 1.00000E-04)
+        for (k in 1:na8[i]) {
+            zero8[i, k] ~ dpois(phi8[i, k]) 
+	   phi8[i, k] <- 1E6 - alpha * (r8[i, k] * log(p8[i, k]) + (n8[i, k] - r8[i, k]) * log(1 - p8[i, k])) 
+            logit(p8[i, k]) <- mu8[i] + delta8[i, k]
+            rhat8[i, k] <- p8[i, k] * n8[i, k]
+         dev8[i, k] <- alpha * 2 *
+			  (r8[i, k] * (log(r8[i, k]) - log(rhat8[i, k])) +
+			   (n8[i, k]-r8[i, k]) * (log(n8[i, k] - r8[i, k]) - log(n8[i, k] - rhat8[i, k])))
+        }
+        resdev8[i] <- sum(dev8[i, 1:na8[i]])
+        for (k in 2:na8[i]) {
+            delta8[i, k] ~ dnorm(md8[i, k], taud8[i, k])
+            md8[i, k] <- d8[t8[i, k]] - d8[t8[i, 1]] + sw8[i, k]
+            taud8[i, k] <- tau8 * 2 * (k - 1)/k
+            w8[i, k] <- (delta8[i, k] - d8[t8[i, k]] + d8[t8[i, 1]])
+            sw8[i, k] <- sum(w8[i, 1:(k - 1)])/(k - 1)
+        }
+    }
+    totresdev8 <- sum(resdev8[])
+    d8[1] <- 0.00000E+00
+    
+for(k in 2:nt){
+    or8[1,k] <- exp(d8[k])
+}
+   
+    vari8 ~ dlnorm(-4.06, 0.6897)
+    tau8 <- 1/vari8
+    
+    sd8 <- pow(tau8, -0.5)
 
 
 
