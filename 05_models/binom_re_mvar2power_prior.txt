@@ -12,10 +12,10 @@ d6[k] ~ dnorm(d_oa[k], tau_oa)
 d7[k] ~ dnorm(d_oa[k], tau_oa)
 d8[k] ~ dnorm(d_oa[k], tau_oa)
 
-d_oa[k] ~ dnorm(0.00000E+00, 1.00000E-04)
+d_oa[k] ~ dnorm(0.00000E+00, 0.11) #try to reign in insane values equivalent to dnorm(0, 3) with 3 as sd.
 }
 
-sd_oa ~ dunif(0,2)
+sd_oa ~ dunif(0,10)
 tau_oa <- pow(sd, -2)
 
 resdev_oa <- sum(totresdev1[],  totresdev2[], totresdev3[], totresdev4[], totresdev5[], totresdev6[], totresdev7[], totresdev8[])

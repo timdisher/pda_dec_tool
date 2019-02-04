@@ -62,10 +62,10 @@ data = input %>% group_by(studlab) %>% mutate(y = y - first(y)) %>% mutate(y = i
 list(input = input,data = data, wide = wide)
 }
 
-library(ggnetwork)
-library(sna)
-library(igraph)
-library(intergraph)
+# library(ggnetwork)
+# library(sna)
+# library(igraph)
+# library(intergraph)
 
 pub_netgraph = function(chars,nodecolour = "mediumorchid2", layout = "circle"){
   
