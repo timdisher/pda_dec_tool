@@ -5,8 +5,8 @@ account: timdisher
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 674466
-bundleId: 1852354
+bundleId: 1872564
 url: https://timdisher.shinyapps.io/cnprm_mcda/
-when: 1549141819.61344
+when: 1550006028.94174
 asMultiple: FALSE
 asStatic: FALSE

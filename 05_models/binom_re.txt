@@ -27,7 +27,8 @@ model
         d[k] ~ dnorm(0.00000E+00, 1.00000E-04)
     }
     
-    vari ~ dlnorm(-4.06, 0.6897)
+    inf_prec <- pow(1.45, -2)
+    vari ~ dlnorm(-4.06, inf_prec)
     tau <- 1/vari
     
     sd <- pow(tau, -0.5)

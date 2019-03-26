@@ -59,12 +59,8 @@ tagList(
         $("header").find("nav").append(\'<span class="myClass"> MCDA-SMAA in PDA </span>\');
       })
      ')
-    ),
-  
-  tags$script(src = "lib/highcharts.js"),
-  tags$script(src = "lib/exporting.js"),
-  tags$script(src = "lib/export-data.src.js"),
-  tags$script(src = "lib/networkgraph.js")
+    )
+
 )}
 
 #====================================================================================== =
@@ -81,7 +77,7 @@ about_content <- function(){
   
   fluidRow(style='padding-left:25px;',
            
-  p("Welcome to the interactive webapp for CNPRM poster ID 0281_0409_000102:",
+  p("Welcome to the interactive webapp for CNPRM poster P30:",
     tags$b("\"Variations in Practice May be Evidence-Based: Application of Multi-Criteria 
     Decision Analysis to Treatments for Patent Ductus Arteriosus\"."), 
     "The app has three main features that are accessible from the sidebar and will allow you to:",
@@ -94,13 +90,14 @@ about_content <- function(){
        ),
     "To get started use the navigation bar on the left to explore the different modules"),
   
+  tags$iframe(style="height:400px; width:100%", src="poster.pdf"),
 
   h3("About the Authors"),
   
   #Tim's Bio---- -
 
 
-  tags$img(src = "headshots/tim_pic.PNG", height = "25%", width = "25%", align = "left", 
+  tags$img(src = "headshots/tim_pic.PNG", height = "25%", width = "25%", align = "left", style = "max-height: 214px; max-width: 210px",
            hspace = 20, vspace = 5),
   
   h3("Tim Disher, BScN, RN, PhD(c)"),
@@ -113,7 +110,7 @@ about_content <- function(){
  
   #Souvik's Bio---- -
   
-  tags$img(src = "headshots/souvik_pic.jpg", height = "25%", width = "25%", align = "left", 
+  tags$img(src = "headshots/souvik_pic.jpg", height = "25%", width = "25%", align = "left", style = "max-height: 260px; max-width: 214px",
            hspace = 20, vspace = 5),
   
   h3("Souvik Mitra, MD, MSc, RCPSC Affiliate"),
@@ -137,7 +134,7 @@ about_content <- function(){
   
   #Louis' Bio---- -
   
-  tags$img(src = "headshots/louis_pic.jpg", height = "25%", width = "25%", align = "left", 
+  tags$img(src = "headshots/louis_pic.jpg", height = "25%", width = "25%", align = "left", style = "max-height: 214px; max-width: 210px",
            hspace = 20, vspace = 5),
   
   h3("Louis Beaubien, PhD"),
@@ -152,13 +149,29 @@ about_content <- function(){
   
   #Marsha's Bio---- -
   
-  tags$img(src = "headshots/marsha_pic.PNG", height = "25%", width = "25%", align = "left", 
+  tags$img(src = "headshots/marsha_pic.PNG", height = "25%", width = "25%", align = "left", style = "max-height: 214px; max-width: 210px",
            hspace = 20, vspace = 5),
   
   h3("Marsha Campbell-Yeo, RN, MN.NNP-BC, PhD"),
-  p("Leading national and international interdisciplinary research teams consisting
-    of clinicians, researchers and stakeholders from diverse backgrounds and disciplines,
-    Dr. Campbell-Yeo's passion has led her all over the world, and her home is MOM-LINC lab.")
+  p("Dr. Campbell-Yeo, a neonatal nurse practitioner and clinician scientist, is an Associate Professor 
+     at the School of Nursing, Faculty of Health, Dalhousie University and holds cross appointments in the 
+     Department of Pediatrics, and Psychology and Neuroscience. Her Canada Foundation of Innovation funded 
+     research and interdisciplinary training lab, MOM-LINC (Mechanisms, Outcome and Mobilization of 
+     Maternally-Led Interventions to Improve Newborn Care), is located at the IWK Health Centre. 
+     She primarily holds grants examining maternally-led interventions to improve outcomes of medically 
+     at-risk newborns specifically related to pain, stress and neurodevelopment as well as novel knowledge 
+     synthesis and dissemination, and e-heath interventions most notably related to parental engagement."),
+  
+    p("She has been recognized for her contributions to the field via numerous training, leadership, and research 
+    awards. Most notably, as the recipient of the Inaugural 2018 Dalhousie University President\'s Award for 
+    research excellence, was named one of 150 Nurses championing innovation in health for Canada by the Canadian 
+    Nurses Association to mark the 150th anniversary of Confederation (2017), invited as a member of the Royal 
+    Society of Canada\'s College of New Scholars, Artists and Scientists (2017), a Canadian Institute of Health 
+    Research New Investigator Award (2016- 2021), the Canadian Pain Society 2015 Early Career Award, and a 
+    Career Development Award from the Canadian Child Health Clinician Scientist Program (2013-2017) . She is 
+    the current Treasurer and a Council Member of the Pain in Childhood Special Interest Group of the 
+    International Society for the Study of Pain and past Secretary of the Canadian Pain Society Board of Directors.
+    ")
   )
   )
 )
@@ -175,12 +188,12 @@ about_content <- function(){
 #
 #====================================================================================== =
 
-menu_choices <- function(about, net_vis, run_mcda, results){
+menu_choices <- function(about, net_vis, run_mcda,  results = NULL){
   sidebarMenu(
     id = "sidebar",
     menuItem("About", tabName = about, icon = icon("question-circle")),
     menuItem("Network Visualization", tabName = net_vis, icon = icon("connectdevelop")),
-    menuItem("Run Analysis", tabName = run_mcda, icon = icon("plane-departure")),
-    menuItem("Results", tabName = results, icon = icon("chart-bar"))
+    menuItem("Run Analysis", tabName = run_mcda, icon = icon("plane-departure"))
+    #menuItem("Results", tabName = results, icon = icon("chart-bar"))
   )
 }

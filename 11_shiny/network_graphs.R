@@ -6,121 +6,41 @@ net_content <- function(){
             comparisons. The size of the node is proportional the total number of patients
             who received the treatment. The width of links are proportional to the number
             of studies comparing two treatments. "),
-          shiny::tabsetPanel(type = "tabs",
+          tabBox(width = 12, id = "net_box",
                              net_pda_closure(),
-                             net_rpt_trt(),
                              net_sx(),
                              net_mort(),
-                             net_nec(),
-                             net_bpd(),
-                             net_ivh(),
-                             net_oligo()
+                             net_nec()
                              )
           )
 }
 
 net_pda_closure <- function(){
   tabPanel("PDA Closure",
-          tags$div(id= "pda_net",
-                   style="min-width: 320px; 
-                          max-width: 500px; 
-                          height: 600px; 
-                          margin: 0 auto
-                          margin-left: 0"),
-
-         tags$script(type = 'text/javascript', src = "network_graphs/network_chart_pda.js")
-           )
-           
-}
-
-net_rpt_trt <- function(){
-  tabPanel("Need for repeat pharmacotherapy",
-           tags$div(id= "rpt_rx_net",
-                    style="min-width: 50px; 
-                    max-width: 500px; 
-                    height: 400px; 
-                    margin: 0 auto
-                    margin-left: 0"),
-           
-           tags$script(type = 'text/javascript', src = "network_graphs/network_chart_rpt_rx.js")
-  )
+           fluidPage(h2("Patent ductus arteriosus closure"), h4("60 trials; 4256 infants"), 
+                     tags$img(src = "network_graphs/pda_netgraph.PNG", height = "100%", width = "100%", style = "max-height: 1014px; max-width: 746px")))
            
 }
 
 net_sx <- function(){
-  tabPanel("Need for surgical ligation",
-           tags$div(id= "sx_net",
-                    style="min-width: 50px; 
-                    max-width: 500px; 
-                    height: 400px; 
-                    margin: 0 auto
-                    margin-left: 0"),
-           
-           tags$script(type = 'text/javascript', src = "network_graphs/network_chart_sx.js")
-  )
+  tabPanel("Surgical ligation",
+           fluidPage(h2("Need for surgical patent ductus arteriosus ligation"), h4("37 trials; 2729 infants"), 
+                     tags$img(src = "network_graphs/sx_netgraph.PNG", height = "100%", width = "100%", style = "max-height: 1014px; max-width: 746px")))
+  
 }
 
 net_mort <- function(){
-  tabPanel("Neonatal mortality",
-           tags$div(id= "mort_net",
-                    style="min-width: 50px; 
-                    max-width: 500px; 
-                    height: 400px; 
-                    margin: 0 auto
-                    margin-left: 0"),
-           
-           tags$script(type = 'text/javascript', src = "network_graphs/network_chart_mort.js")
-           )
+  tabPanel("Mortality",
+           fluidPage(h2("Neonatal Mortality"), h4("46 trials; 3329 infants"), 
+                     tags$img(src = "network_graphs/mort_netgraph.PNG", height = "100%", width = "100%", style = "max-height: 1014px; max-width: 746px")))
+  
 }
-
 net_nec <- function(){
-  tabPanel("Necrotizing enterocolitis",
-           tags$div(id= "nec_net",
-                    style="min-width: 50px; 
-                    max-width: 500px; 
-                    height: 400px; 
-                    margin: 0 auto
-                    margin-left: 0"),
-           
-           tags$script(type = 'text/javascript', src = "network_graphs/network_chart_nec.js")
-           )
+  tabPanel("NEC",
+           fluidPage(h2("Necrotizing enterocolitis"), h4("45 trials; 3371 infants"), 
+                     tags$img(src = "network_graphs/nec_netgraph.PNG", height = "100%", width = "100%", style = "max-height: 1014px; max-width: 746px")))
+  
 }
 
-net_bpd <- function(){
-  tabPanel("Bronchopulmonary Dysplasia",
-           tags$div(id= "bpd_net",
-                    style="min-width: 50px; 
-                    max-width: 500px; 
-                    height: 400px; 
-                    margin: 0 auto
-                    margin-left: 0"),
-           
-           tags$script(type = 'text/javascript', src = "network_graphs/network_chart_bpd.js")
-  )
-}
 
-net_ivh <- function(){
-  tabPanel("Intraventricular Hemorrhage",
-           tags$div(id= "ivh_net",
-                   style="min-width: 50px; 
-                    max-width: 500px; 
-                    height: 400px; 
-                    margin: 0 auto
-                    margin-left: 0"),
-           
-           tags$script(type = 'text/javascript', src = "network_graphs/network_chart_ivh.js")
-  )
-}
 
-net_oligo <- function() {
-  tabPanel("Oliguria",
-           tags$div(id= "oligo_net",
-                    style="min-width: 50px; 
-                    max-width: 500px; 
-                    height: 400px; 
-                    margin: 0 auto
-                    margin-left: 0"),
-           
-           tags$script(type = 'text/javascript', src = "network_graphs/network_chart_oliguria.js")
-  )
-}

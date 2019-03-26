@@ -2,7 +2,7 @@
 library(readxl)
 source("./03_analyses/01_clean.R")
 source("./04_functions/nma_cont_gemtc.R")
-load("reg_out_res.rda")
+#load("reg_out_res.rda")
 library(smaa)
 library(hitandrun)
 
@@ -18,86 +18,88 @@ library(hitandrun)
 #================================= ==
 
 
-# nma_binom = function(data, params = binom_params_re,
-#                   model = mf_binom_re_con,
-#                   tables = c("or","SUCRA"),
-#                   est = c("or","SUCRA"),
-#                   treats = all_codes_temp){
-# 
-#   #Output list for WinBUGS
-#   wb_list = wb_cont_list(data = data, cont = FALSE)
-# 
-#   #Run Model
-#   model = jags.parallel(wb_list,NULL,params,model.file = model,
-#                         n.chains = 3, n.iter = 20000, n.burnin = 10000, n.thin = 1)
-# 
-#   con_tabs = jags_out(model_summary = model$BUGSoutput$summary,treatments = treats,
-#                       tables = tables,est = est)
-# 
-#   out = list(wb_data = data,trts = treats, cons = model,cons_tables = con_tabs)
-# 
-#   out
+nma_binom = function(data, params = binom_params_re,
+                  model = mf_binom_re_con,
+                  tables = c("or","SUCRA"),
+                  est = c("or","SUCRA"),
+                  treats = all_codes_temp){
+
+  #Output list for WinBUGS
+  wb_list = wb_cont_list(data = data, cont = FALSE)
+
+  #Run Model
+  model = jags.parallel(wb_list,NULL,params,model.file = model,
+                        n.chains = 3, n.iter = 20000, n.burnin = 10000, n.thin = 1)
+
+  con_tabs = jags_out(model_summary = model$BUGSoutput$summary,treatments = treats,
+                      tables = tables,est = est)
+
+  out = list(wb_data = data,trts = treats, cons = model,cons_tables = con_tabs)
+
+  out
+}
+
+
+#Binomial models====================================
+#write.model(binom_re, "./05_models/binom_re.txt")
+mf_binom_re_con = c("./05_models/binom_re.txt")
+#mf_binom_re_con = c("./05_models/binom_re_tight_priors.txt")
+
+binom_params_re = c("d","or","SUCRA","rk", "sd")
+
+
+nma_list <- rep(list(NA), length(all_outs))
+for(i in seq_along(all_outs)){
+
+all_codes_temp <- all_codes[,c(1, i+1)] %>% `colnames<-`(c("trt", "t"))
+nma_list[[i]] <- nma_binom(data = all_outs[[i]] %>% mutate(na = 2))
+
+names(nma_list)[[i]] <- names(all_outs)[[i]]
+
+}
+
+  #----------------------------------------------------------------------------- -
+#----------------------------------------------------------------------------- -
+# Assumptions re: missing treatments
+#  Base case: retains relative efficacy from closure.Rationale is that closure
+#  was originally seen as a surrogate for everything else.
+
+
+d_s <- rep(list(NA), 8)
+for(i in seq_along(d_s)){
+
+temp <- nma_list[[i]]$cons$BUGSoutput$sims.matrix %>% as.data.frame() %>% select(starts_with("d["), starts_with("rk"))
+
+trts <- all_codes %>% select(trt, names(nma_list)[[i]]) %>% drop_na() %>% .$trt
+
+colnames(temp) <- c(trts, paste0(trts, "_rk"))
+
+# if(names(nma_list)[[i]] != "oligo"){
+# temp <- temp %>% mutate_all(funs(. - PLAC_NORX)) # Get everything vs placebo
 # }
-# 
-# 
-# #Binomial models====================================
-# #write.model(binom_re, "./05_models/binom_re.txt")
-# mf_binom_re_con = c("./05_models/binom_re.txt")
-# binom_params_re = c("d","or","SUCRA","rk", "sd")
-# 
-# 
-# nma_list <- rep(list(NA), length(all_outs))
-# for(i in seq_along(all_outs)){
-# 
-# all_codes_temp <- all_codes[,c(1, i+1)] %>% `colnames<-`(c("trt", "t"))
-# nma_list[[i]] <- nma_binom(data = all_outs[[i]] %>% mutate(na = 2))
-# 
-# names(nma_list)[[i]] <- names(all_outs)[[i]]
-# 
-# }
-# 
-#   #----------------------------------------------------------------------------- -
-# #----------------------------------------------------------------------------- -
-# # Assumptions re: missing treatments
-# #  Base case: retains relative efficacy from closure.Rationale is that closure
-# #  was originally seen as a surrogate for everything else.
-# 
-# 
-# d_s <- rep(list(NA), 8)
-# for(i in seq_along(d_s)){
-# 
-# temp <- nma_list[[i]]$cons$BUGSoutput$sims.matrix %>% as.data.frame() %>% select(starts_with("d["), starts_with("rk"))
-# 
-# trts <- all_codes %>% select(trt, names(nma_list)[[i]]) %>% drop_na() %>% .$trt
-# 
-# colnames(temp) <- c(trts, paste0(trts, "_rk"))
-# 
-# # if(names(nma_list)[[i]] != "oligo"){
-# # temp <- temp %>% mutate_all(funs(. - PLAC_NORX)) # Get everything vs placebo
-# # }
-# 
-# d_s[[i]] <- temp
-# names(d_s)[[i]] <- names(nma_list)[[i]]
-# }
-# 
-# #Bring rank from Closure over to outcomes where missing. 
-# 
-# d_s$rpt_rx <- d_s$rpt_rx %>% mutate(IBUIVCONT_rk = ifelse(11 - d_s$closure$INDOIVCONT_rk == 10, 9, 11 - d_s$closure$INDOIVCONT_rk))
-# d_s$bpd <- d_s$bpd %>% mutate(IBUPOHIGHDOSE_rk = ifelse(11 - d_s$closure$IBUPOHIGHDOSE_rk > 8, 8, 11 - d_s$closure$IBUPOHIGHDOSE_rk),
-#                                  INDOIVCONT_rk = ifelse(11 - d_s$closure$INDOIVCONT_rk > 8, 8, 11 - d_s$closure$INDOIVCONT_rk))
-# d_s$oligo <- d_s$oligo %>% mutate(PLAC_NORX_rk = ifelse(11 - d_s$closure$PLAC_NORX_rk > 9, 9, 11 - d_s$closure$PLAC_NORX_rk))
-# 
-# # For each treatment missing from each outcome, select the nth ranked lor that matches their rank in closure
-# for(i in 1:nrow(d_s$rpt_rx)){
-# d_s$rpt_rx$IBUIVCONT[[i]] <- sort(as.numeric(d_s$rpt_rx[i,1:9]))[[d_s$rpt_rx$IBUIVCONT_rk[[i]]]]
-# 
-# d_s$bpd$IBUPOHIGHDOSE[[i]] <- sort(as.numeric(d_s$bpd[i,1:8]))[[d_s$bpd$IBUPOHIGHDOSE_rk[[i]]]]
-# d_s$bpd$INDOIVCONT[[i]] <- sort(as.numeric(d_s$bpd[i,1:8]))[[d_s$bpd$INDOIVCONT_rk[[i]]]]
-# 
-# d_s$oligo$PLAC_NORX[[i]] <- sort(as.numeric(d_s$oligo[i,1:9]))[[d_s$oligo$PLAC_NORX_rk[[i]]]]
-# }
-# 
-# d_s <- d_s %>% map(., ~select(., -ends_with("_rk")))
+
+d_s[[i]] <- temp
+names(d_s)[[i]] <- names(nma_list)[[i]]
+}
+
+#Bring rank from Closure over to outcomes where missing.
+
+d_s$rpt_rx <- d_s$rpt_rx %>% mutate(IBUIVCONT_rk = ifelse(11 - d_s$closure$INDOIVCONT_rk == 10, 9, 11 - d_s$closure$INDOIVCONT_rk))
+d_s$bpd <- d_s$bpd %>% mutate(IBUPOHIGHDOSE_rk = ifelse(11 - d_s$closure$IBUPOHIGHDOSE_rk > 8, 8, 11 - d_s$closure$IBUPOHIGHDOSE_rk),
+                                 INDOIVCONT_rk = ifelse(11 - d_s$closure$INDOIVCONT_rk > 8, 8, 11 - d_s$closure$INDOIVCONT_rk))
+d_s$oligo <- d_s$oligo %>% mutate(PLAC_NORX_rk = ifelse(11 - d_s$closure$PLAC_NORX_rk > 9, 9, 11 - d_s$closure$PLAC_NORX_rk))
+
+# For each treatment missing from each outcome, select the nth ranked lor that matches their rank in closure
+for(i in 1:nrow(d_s$rpt_rx)){
+d_s$rpt_rx$IBUIVCONT[[i]] <- sort(as.numeric(d_s$rpt_rx[i,1:9]))[[d_s$rpt_rx$IBUIVCONT_rk[[i]]]]
+
+d_s$bpd$IBUPOHIGHDOSE[[i]] <- sort(as.numeric(d_s$bpd[i,1:8]))[[d_s$bpd$IBUPOHIGHDOSE_rk[[i]]]]
+d_s$bpd$INDOIVCONT[[i]] <- sort(as.numeric(d_s$bpd[i,1:8]))[[d_s$bpd$INDOIVCONT_rk[[i]]]]
+
+d_s$oligo$PLAC_NORX[[i]] <- sort(as.numeric(d_s$oligo[i,1:9]))[[d_s$oligo$PLAC_NORX_rk[[i]]]]
+}
+
+d_s <- d_s %>% map(., ~select(., -ends_with("_rk")))
 # save(d_s, file = "reg_out_res.rda")
 
 #----------------------------------------------------------------------------- -
@@ -133,6 +135,9 @@ p_s[[i]] <- d_s[[i]] %>% select(-ends_with("_rk")) %>% mutate_all(funs(plogis(ba
 
 names(p_s)[[i]] <- names(d_s)[[i]]
 }
+
+
+p_s$closure %>% summarise_all(funs(mean))
 
 p_s[-1] <- map(p_s[-1],~ 1 - .) # Choices are based on sum of partial values * weight so higher is better
 #smaa requires performance across outcomes as an array
